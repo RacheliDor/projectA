@@ -3,24 +3,21 @@ import math
 import cv2
 from ultralytics import YOLO
 
-# --- הגדרות ---
-# ודאי שהנתיבים האלו מדוייקים!
 LOG_FILE_PATH = '/home/user_104/RR/drone_full_scan_results/positions_log.txt'
 IMAGE_FOLDER = '/home/user_104/RR/drone_full_scan_results/3' 
 MODEL_PATH = '/home/user_104/RR/runs/drone_model_final_small/weights/best.pt'
 OUTPUT_FILE = '/home/user_104/RR/final_human_locations.csv'
 
-# נתוני מצלמה
 FOV = 90.0
 DRONE_ALTITUDE = 20.0 
 
 def parse_log_file(log_path):
     coords_db = {}
     if not os.path.exists(log_path):
-        print(f"❌ ERROR: Log file NOT found at: {log_path}")
+        print(f"ERROR: Log file NOT found at: {log_path}")
         return {}
 
-    print(f"✅ Found log file at: {log_path}")
+    print(f"Found log file at: {log_path}")
     try:
         with open(log_path, 'r') as f:
             lines = f.readlines()
@@ -32,9 +29,9 @@ def parse_log_file(log_path):
                     y = float(parts[3].strip())
                     filename = parts[5].strip() 
                     coords_db[filename] = {'x': x, 'y': y}
-        print(f"✅ Successfully loaded {len(coords_db)} positions from log.")
+        print(f"Successfully loaded {len(coords_db)} positions from log.")
     except Exception as e:
-        print(f"❌ ERROR parsing log file: {e}")
+        print(f"ERROR parsing log file: {e}")
         
     return coords_db
 
@@ -49,10 +46,8 @@ def pixel_to_meters(x_center, y_center, img_w, img_h, altitude):
     meters_per_pixel_x = ground_width_meters / img_w
     meters_per_pixel_y = ground_height_meters / img_h
     
-    # --- התיקון: השורות שהיו חסרות ---
     offset_x_meters = x_dist_px * meters_per_pixel_x
     offset_y_meters = y_dist_px * meters_per_pixel_y
-    # --------------------------------
     
     real_offset_forward = -offset_y_meters 
     real_offset_right = offset_x_meters    
@@ -63,16 +58,16 @@ def main():
     print("\n--- DIAGNOSTICS START ---")
     
     if not os.path.exists(MODEL_PATH):
-        print(f"❌ ERROR: Model file not found at {MODEL_PATH}")
+        print(f"ERROR: Model file not found at {MODEL_PATH}")
         return
 
     if not os.path.exists(IMAGE_FOLDER):
-        print(f"❌ ERROR: Image folder not found at {IMAGE_FOLDER}")
+        print(f"ERROR: Image folder not found at {IMAGE_FOLDER}")
         return
         
     positions = parse_log_file(LOG_FILE_PATH)
     if not positions: 
-        print("❌ STOPPING: Could not load positions.")
+        print("STOPPING: Could not load positions.")
         return
 
     print("--- LOADING MODEL ---")
@@ -88,7 +83,7 @@ def main():
         image_files.sort()
         
         if not image_files:
-            print("❌ No .png images found!")
+            print("No .png images found!")
             return
 
         print(f"Processing {len(image_files)} images...")
@@ -122,10 +117,10 @@ def main():
 
     print("\n--- FINAL REPORT ---")
     if found_count > 0:
-        print(f"✅ SUCCESS! Found {found_count} humans.")
-        print(f"✅ File saved at: {OUTPUT_FILE}")
+        print(f"SUCCESS! Found {found_count} humans.")
+        print(f"File saved at: {OUTPUT_FILE}")
     else:
-        print("⚠️ Completed, but NO humans were detected.")
+        print("Completed, but NO humans were detected.")
 
 if __name__ == "__main__":
     main()
