@@ -4,17 +4,14 @@ import cv2
 import shutil
 from ultralytics import YOLO
 
-# --- הגדרות ---
-# ודאי שהנתיבים האלו מדוייקים!
 LOG_FILE_PATH = '/home/user_104/RR/drone_full_scan_results/positions_log.txt'
 IMAGE_FOLDER = '/home/user_104/RR/drone_full_scan_results/3' 
 MODEL_PATH = '/home/user_104/RR/runs/drone_model_final_small/weights/best.pt'
 
-# איפה לשמור את התמונות המצוירות?
+
 OUTPUT_VISUAL_DIR = '/home/user_104/RR/annotated_images'
 OUTPUT_CSV_FILE = '/home/user_104/RR/final_human_locations.csv'
 
-# נתוני מצלמה
 FOV = 90.0
 DRONE_ALTITUDE = 20.0 
 
