@@ -24,7 +24,7 @@ def setup_directories():
 def parse_log_file(log_path):
     coords_db = {}
     if not os.path.exists(log_path):
-        print(f"❌ ERROR: Log file NOT found at: {log_path}")
+        print(f"ERROR: Log file NOT found at: {log_path}")
         return {}
 
     try:
@@ -38,7 +38,7 @@ def parse_log_file(log_path):
                     filename = parts[5].strip() 
                     coords_db[filename] = {'x': x, 'y': y}
     except Exception as e:
-        print(f"❌ ERROR parsing log file: {e}")
+        print(f"ERROR parsing log file: {e}")
     return coords_db
 
 def pixel_to_meters(x_center, y_center, img_w, img_h, altitude):
@@ -65,7 +65,7 @@ def main():
     setup_directories()
     
     if not os.path.exists(MODEL_PATH) or not os.path.exists(IMAGE_FOLDER):
-        print("❌ Error: Check your paths (Model or Images folder).")
+        print("Error: Check your paths (Model or Images folder).")
         return
         
     positions = parse_log_file(LOG_FILE_PATH)
@@ -144,11 +144,11 @@ def main():
 
     print("\n--- FINAL REPORT ---")
     if found_count > 0:
-        print(f"✅ SUCCESS! Found {found_count} humans.")
-        print(f"🖼️  Check the annotated images in: {OUTPUT_VISUAL_DIR}")
-        print(f"📄 Data saved to: {OUTPUT_CSV_FILE}")
+        print(f"SUCCESS! Found {found_count} humans.")
+        print(f"Check the annotated images in: {OUTPUT_VISUAL_DIR}")
+        print(f"Data saved to: {OUTPUT_CSV_FILE}")
     else:
-        print("⚠️ No humans detected.")
+        print("No humans detected.")
 
 if __name__ == "__main__":
     main()
